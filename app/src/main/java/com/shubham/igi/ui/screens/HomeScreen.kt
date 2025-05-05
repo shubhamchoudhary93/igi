@@ -1,21 +1,36 @@
 package com.shubham.igi.ui.screens
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import android.util.Log
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.shubham.igi.data.model.InventoryItem
 import com.shubham.igi.data.model.InventoryUpdate
-import androidx.compose.foundation.clickable
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.toSize
 import com.shubham.igi.ui.navigation.NavigationButtons
-import android.util.Log
 
 @Composable
 fun HomeScreen(
@@ -31,18 +46,21 @@ fun HomeScreen(
     var selectedCategory by remember { mutableStateOf(categories.firstOrNull() ?: "") }
 
     val filteredItems = items.filter { it.category == selectedCategory }
-    Log.d("HomeScreen", "Filtered Items for '$selectedCategory': ${filteredItems.map { it.name }}")
     var selectedItem by remember { mutableStateOf(filteredItems.firstOrNull()) }
-    var change by remember { mutableStateOf("") }
+    var change by remember { mutableStateOf(selectedItem?.defaultChange) }
 
     LaunchedEffect(selectedCategory) {
         selectedItem = filteredItems.firstOrNull()
     }
 
-    val changeInt = change.toIntOrNull()
+    val changeInt = change
     val isValidChange = changeInt != null
 
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
         DropdownMenuBox("Category", categories, selectedCategory) { selectedCategory = it }
         Spacer(Modifier.height(8.dp))
         DropdownMenuBox("Item", filteredItems.map { it.name }, selectedItem?.name ?: "") {
@@ -50,8 +68,13 @@ fun HomeScreen(
         }
         Spacer(Modifier.height(8.dp))
         selectedItem?.let {
-            Text("Current Amount: ${it.amount}")
-            TextField(value = change, onValueChange = { change = it }, label = { Text("Change") })
+            Text("Current Amount: ${it.amount}", fontSize = 10.sp)
+            TextField(
+                value = it.defaultChange.toString(),
+                onValueChange = { change = it.toInt() },
+                label = { Text("Change") },
+                modifier = Modifier.fillMaxWidth()
+            )
             Row {
                 Button(
                     onClick = {
@@ -89,7 +112,12 @@ fun HomeScreen(
 
         Spacer(Modifier.height(16.dp))
         Text("Today's Updates:")
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+        ) {
+
             items(tempUpdates) {
                 Text("${it.itemName}: ${it.change}")
             }

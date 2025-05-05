@@ -1,11 +1,20 @@
 package com.shubham.igi.ui.components
 
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.shubham.igi.data.model.InventoryItem
-import androidx.compose.foundation.layout.*
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun InventoryDialog(
@@ -19,7 +28,7 @@ fun InventoryDialog(
                 Text(text = item.name, style = MaterialTheme.typography.titleLarge)
                 Text("Category: ${item.category}")
                 Text("Amount: ${item.amount}")
-                Text("Description: ${item.description}")
+                Text("Default Change: ${item.defaultChange}")
                 Spacer(modifier = androidx.compose.ui.Modifier.height(16.dp))
                 Row {
                     Button(onClick = onEdit) {

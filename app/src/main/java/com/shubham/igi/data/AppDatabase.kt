@@ -37,27 +37,7 @@ abstract class AppDatabase : RoomDatabase() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
                         CoroutineScope(Dispatchers.IO).launch {
-                            val dao = INSTANCE?.inventoryDao()
-                            val updateDao = INSTANCE?.updateDao()
-
-                            // Insert demo items
-                            val riceId = dao?.insertItem(InventoryItem(name = "Rice", category = "Food", amount = 100)) ?: 0L
-                            val wheatId = dao?.insertItem(InventoryItem(name = "Wheat", category = "Food", amount = 150)) ?: 0L
-                            val shampooId = dao?.insertItem(InventoryItem(name = "Shampoo", category = "Toiletries", amount = 30)) ?: 0L
-
-                            // Insert demo updates
-                            updateDao?.insertUpdate(
-                                InventoryUpdate(itemId = riceId as Int, itemName = "Rice", date = "2025-05-03", change = 10)
-                            )
-                            updateDao?.insertUpdate(
-                                InventoryUpdate(itemId = wheatId as Int,  itemName = "Wheat", date = "2025-05-03", change = -5)
-                            )
-                            updateDao?.insertUpdate(
-                                InventoryUpdate(itemId = riceId as Int,  itemName = "Rice", date = "2025-05-04", change = 15)
-                            )
-                            updateDao?.insertUpdate(
-                                InventoryUpdate(itemId = shampooId as Int,  itemName = "Shampoo", date = "2025-05-04", change = -2)
-                            )
+                            populateData(INSTANCE)
                         }
                     }
                 }).build()

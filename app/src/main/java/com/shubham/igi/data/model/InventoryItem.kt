@@ -9,5 +9,5 @@ data class InventoryItem(
     val name: String,
     val category: String,
     val amount: Int,
-    val description: String = ""
+    val defaultChange: Int = 1
 )
