@@ -29,6 +29,7 @@ fun InventoryDialog(
                 Text("Category: ${item.category}")
                 Text("Amount: ${item.amount}")
                 Text("Default Change: ${item.defaultChange}")
+                Text("Min Quantity: ${item.minQ}")
                 Spacer(modifier = androidx.compose.ui.Modifier.height(16.dp))
                 Row {
                     Button(onClick = onEdit) {

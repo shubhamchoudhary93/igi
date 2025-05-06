@@ -36,6 +36,7 @@ fun AddEditScreen(
     var category by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
     var defaultChange by remember { mutableStateOf("") }
+    var minQ by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
 
     // Populate fields when selectedItem is available
@@ -45,12 +46,13 @@ fun AddEditScreen(
             category = it.category
             amount = it.amount.toString()
             defaultChange = it.defaultChange.toString()
+            minQ = it.minQ.toString()
         }
     }
 
     // Validate inputs before saving
     fun validateInputs(): Boolean {
-        return name.isNotBlank() && category.isNotBlank() && amount.isNotBlank() && defaultChange.isNotBlank()
+        return name.isNotBlank() && category.isNotBlank() && amount.isNotBlank() && defaultChange.isNotBlank() && minQ.isNotBlank()
     }
 
     // Function to clear the fields
@@ -59,6 +61,7 @@ fun AddEditScreen(
         category = ""
         amount = ""
         defaultChange = ""
+        minQ = ""
         errorMessage = ""
     }
 
@@ -90,6 +93,13 @@ fun AddEditScreen(
             label = { Text("Default Change") },
             modifier = Modifier.fillMaxWidth() // Make it take full width
         )
+        Spacer(modifier = Modifier.height(8.dp))
+        TextField(
+            value = minQ,
+            onValueChange = { minQ = it },
+            label = { Text("Min Quantity") },
+            modifier = Modifier.fillMaxWidth() // Make it take full width
+        )
         Spacer(modifier = Modifier
             .height(16.dp)
             .weight(1f))
@@ -109,7 +119,8 @@ fun AddEditScreen(
                             name = name,
                             category = category,
                             amount = amount.toIntOrNull() ?: 0,
-                            defaultChange = defaultChange.toIntOrNull() ?: 1
+                            defaultChange = defaultChange.toIntOrNull() ?: 1,
+                            minQ = minQ.toIntOrNull() ?: 0
                         )
                         onSave(itemToSave)
                         viewModel.clearSelectedItem() // ✅ clear after saving

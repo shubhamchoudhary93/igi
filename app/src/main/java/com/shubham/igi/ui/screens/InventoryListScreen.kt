@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.shubham.igi.data.model.InventoryItem
 import com.shubham.igi.ui.components.InventoryDialog
@@ -26,14 +27,16 @@ import com.shubham.igi.ui.navigation.NavigationButtons
 @Composable
 fun InventoryListScreen(
     items: List<InventoryItem>,
-    onItemClick: (InventoryItem) -> Unit,  // Will be used to store item in ViewModel
-    navTo: (String) -> Unit                // Used to trigger navigation
+    onItemClick: (InventoryItem) -> Unit,
+    navTo: (String) -> Unit
 ) {
     var selectedItem by remember { mutableStateOf<InventoryItem?>(null) }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
         val groupedByCategory = items.groupBy { it.category }
 
         LazyColumn(
@@ -50,13 +53,17 @@ fun InventoryListScreen(
                     )
                 }
                 items(itemList) { item ->
+                    val isBelowMin = item.amount < item.minQ
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { selectedItem = item }
                             .padding(start = 16.dp, bottom = 4.dp)
                     ) {
-                        Text("${item.name} (${item.amount})")
+                        Text(
+                            text = "${item.name} (${item.amount})",
+                            color = if (isBelowMin) Color.Red else Color.Unspecified
+                        )
                     }
                 }
             }
@@ -70,9 +77,9 @@ fun InventoryListScreen(
                 item = item,
                 onClose = { selectedItem = null },
                 onEdit = {
-                    onItemClick(item)         // Store item in ViewModel
-                    navTo("add_edit")         // Navigate to AddEdit screen
-                    selectedItem = null       // Close dialog
+                    onItemClick(item)
+                    navTo("add_edit")
+                    selectedItem = null
                 }
             )
         }
