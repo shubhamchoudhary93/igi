@@ -26,9 +26,11 @@ class MainActivity : ComponentActivity() {
                     val context = applicationContext
                     val db = AppDatabase.getDatabase(context)
                     val repository = InventoryRepository(db.inventoryDao(), db.updateDao())
+
                     val viewModel: InventoryViewModel = viewModel(
                         factory = InventoryViewModel.Factory(repository)
                     )
+
                     val navController = rememberNavController()
 
                     // Collect state from ViewModel
@@ -36,8 +38,10 @@ class MainActivity : ComponentActivity() {
                     val tempUpdates by viewModel.tempUpdates.collectAsState()
                     val allUpdates by viewModel.allUpdates.collectAsState()
 
+                    // ✅ Pass the ViewModel to InventoryNavHost
                     InventoryNavHost(
                         navController = navController,
+                        viewModel = viewModel,
                         inventoryItems = items,
                         tempUpdates = tempUpdates,
                         allUpdates = allUpdates,

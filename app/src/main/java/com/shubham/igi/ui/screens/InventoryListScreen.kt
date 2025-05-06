@@ -1,10 +1,22 @@
 package com.shubham.igi.ui.screens
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.shubham.igi.data.model.InventoryItem
@@ -14,12 +26,14 @@ import com.shubham.igi.ui.navigation.NavigationButtons
 @Composable
 fun InventoryListScreen(
     items: List<InventoryItem>,
-    onItemClick: (InventoryItem) -> Unit,
-    navTo: (String) -> Unit
+    onItemClick: (InventoryItem) -> Unit,  // Will be used to store item in ViewModel
+    navTo: (String) -> Unit                // Used to trigger navigation
 ) {
     var selectedItem by remember { mutableStateOf<InventoryItem?>(null) }
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp)) {
         val groupedByCategory = items.groupBy { it.category }
 
         LazyColumn(
@@ -47,14 +61,20 @@ fun InventoryListScreen(
                 }
             }
         }
+
         Spacer(modifier = Modifier.height(24.dp))
         NavigationButtons(navTo = navTo)
 
-        selectedItem?.let {
+        selectedItem?.let { item ->
             InventoryDialog(
-                item = it,
+                item = item,
                 onClose = { selectedItem = null },
-                onEdit = { onItemClick(it) })
+                onEdit = {
+                    onItemClick(item)         // Store item in ViewModel
+                    navTo("add_edit")         // Navigate to AddEdit screen
+                    selectedItem = null       // Close dialog
+                }
+            )
         }
     }
 }

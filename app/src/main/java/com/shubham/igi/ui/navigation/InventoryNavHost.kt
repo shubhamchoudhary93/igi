@@ -6,18 +6,23 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.shubham.igi.data.model.InventoryItem
 import com.shubham.igi.data.model.InventoryUpdate
-import com.shubham.igi.ui.screens.*
+import com.shubham.igi.ui.screens.AddEditScreen
+import com.shubham.igi.ui.screens.HistoryScreen
+import com.shubham.igi.ui.screens.HomeScreen
+import com.shubham.igi.ui.screens.InventoryListScreen
+import com.shubham.igi.viewmodel.InventoryViewModel
 
 sealed class Screen(val route: String) {
-    object Home : Screen("home")
-    object AddEdit : Screen("add_edit")
-    object List : Screen("list")
-    object History : Screen("history")
+    data object Home : Screen("home")
+    data object AddEdit : Screen("add_edit")
+    data object List : Screen("list")
+    data object History : Screen("history")
 }
 
 @Composable
 fun InventoryNavHost(
     navController: NavHostController,
+    viewModel: InventoryViewModel,
     inventoryItems: List<InventoryItem>,
     tempUpdates: List<InventoryUpdate>,
     allUpdates: List<InventoryUpdate>,
@@ -33,13 +38,14 @@ fun InventoryNavHost(
                 tempUpdates = tempUpdates,
                 onAddUpdate = onAddUpdate,
                 onCommit = onCommit,
+                onDiscard = { viewModel.clearTempUpdates() },
                 navTo = { navController.navigate(it) }
             )
         }
 
         composable(Screen.AddEdit.route) {
             AddEditScreen(
-                item = null, // If editing, pass item via ViewModel or NavBackStack
+                viewModel = viewModel,
                 onSave = {
                     onSaveItem(it)
                     navController.popBackStack()
@@ -52,8 +58,7 @@ fun InventoryNavHost(
             InventoryListScreen(
                 items = inventoryItems,
                 onItemClick = {
-                    // Navigate to edit screen with selected item
-                    // (You’ll need shared ViewModel or nav args for passing item)
+                    viewModel.setSelectedItem(it) // ✅ set selected item in ViewModel
                     navController.navigate(Screen.AddEdit.route)
                 },
                 navTo = { navController.navigate(it) }
@@ -61,8 +66,10 @@ fun InventoryNavHost(
         }
 
         composable(Screen.History.route) {
-            HistoryScreen(updates = allUpdates,
-                navTo = { navController.navigate(it) })
+            HistoryScreen(
+                updates = allUpdates,
+                navTo = { navController.navigate(it) }
+            )
         }
     }
 }

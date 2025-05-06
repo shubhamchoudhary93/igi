@@ -6,10 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.shubham.igi.data.model.InventoryItem
 import com.shubham.igi.data.model.InventoryUpdate
 import com.shubham.igi.data.repository.InventoryRepository
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class InventoryViewModel(private val repository: InventoryRepository) : ViewModel() {
 
@@ -21,6 +24,10 @@ class InventoryViewModel(private val repository: InventoryRepository) : ViewMode
 
     private val _allUpdates = MutableStateFlow<List<InventoryUpdate>>(emptyList())
     val allUpdates: StateFlow<List<InventoryUpdate>> = _allUpdates.asStateFlow()
+
+    // ✅ New: State for selected item
+    private val _selectedItem = MutableStateFlow<InventoryItem?>(null)
+    val selectedItem: StateFlow<InventoryItem?> = _selectedItem.asStateFlow()
 
     init {
         loadItems()
@@ -68,6 +75,20 @@ class InventoryViewModel(private val repository: InventoryRepository) : ViewMode
             }
             _tempUpdates.value = emptyList()
         }
+    }
+
+    fun clearTempUpdates() {
+        _tempUpdates.value = emptyList()
+    }
+
+    // ✅ Set the selected item for editing
+    fun setSelectedItem(item: InventoryItem) {
+        _selectedItem.value = item
+    }
+
+    // ✅ Clear the selected item after save
+    fun clearSelectedItem() {
+        _selectedItem.value = null
     }
 
     private fun currentDateString(): String {
