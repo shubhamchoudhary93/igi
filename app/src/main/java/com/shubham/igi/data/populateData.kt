@@ -1,9 +1,11 @@
 package com.shubham.igi.data
 
+import com.shubham.igi.data.model.FilmInventoryItem
 import com.shubham.igi.data.model.InventoryItem
 
 suspend fun populateData(INSTANCE: AppDatabase?) {
     val dao = INSTANCE?.inventoryDao()
+    val dao2 = INSTANCE?.filmInventoryDao()
 
     // Insert demo items
     dao?.insertItem(
@@ -3336,4 +3338,93 @@ suspend fun populateData(INSTANCE: AppDatabase?) {
             minQ = 0
         )
     )
+
+    //insert demo FilmInventory Items
+
+    dao2?.insertItem(
+        FilmInventoryItem(
+            name = "Garware",
+            size = 7,
+            weight = 59.9f,
+            addDate = "2025-05-06"
+        )
+    )
+    dao2?.insertItem(
+        FilmInventoryItem(
+            name = "Garware",
+            size = 7,
+            weight = 58f,
+            addDate = "2025-05-06"
+        )
+    )
+    dao2?.insertItem(
+        FilmInventoryItem(
+            name = "Garware",
+            size = 10,
+            weight = 58.3f,
+            addDate = "2025-05-05"
+        )
+    )
+    dao2?.insertItem(
+        FilmInventoryItem(
+            name = "Jindle",
+            size = 7,
+            weight = 59.9f,
+            addDate = "2025-05-06"
+        )
+    )
+    dao2?.insertItem(
+        FilmInventoryItem(
+            name = "Local",
+            size = 7,
+            weight = 59.9f,
+            addDate = "2025-05-06"
+        )
+    )
+
+    dao2?.insertItem(
+        FilmInventoryItem(
+            name = "Garware",
+            size = 7,
+            weight = 59.9f,
+            addDate = "2025-05-06",
+            removeData = "2025-05-07"
+        )
+    )
+    dao2?.insertItem(
+        FilmInventoryItem(
+            name = "Garware",
+            size = 7,
+            weight = 57.3f,
+            addDate = "2025-05-06",
+            removeData = "2025-05-07"
+        )
+    )
+    dao2?.insertItem(
+        FilmInventoryItem(
+            name = "Garware",
+            size = 10,
+            weight = 59f,
+            addDate = "2025-05-05",
+            removeData = "2025-05-07"
+        )
+    )
+    dao2?.insertItem(
+        FilmInventoryItem(
+            name = "Jindle",
+            size = 7,
+            weight = 59.9f,
+            addDate = "2025-05-06",
+            removeData = "2025-05-07"
+        )
+    )
+    dao2?.insertItem(
+        FilmInventoryItem(
+            name = "Local",
+            size = 7,
+            weight = 59.1f,
+            addDate = "2025-05-06",
+        )
+    )
+
 }

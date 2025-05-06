@@ -4,19 +4,24 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.shubham.igi.data.model.FilmInventoryItem
 import com.shubham.igi.data.model.InventoryItem
 import com.shubham.igi.data.model.InventoryUpdate
 import com.shubham.igi.ui.screens.AddEditScreen
+import com.shubham.igi.ui.screens.FilmStockScreen
 import com.shubham.igi.ui.screens.HistoryScreen
 import com.shubham.igi.ui.screens.HomeScreen
 import com.shubham.igi.ui.screens.InventoryListScreen
+import com.shubham.igi.ui.screens.StartScreen
 import com.shubham.igi.viewmodel.InventoryViewModel
 
 sealed class Screen(val route: String) {
+    data object Start : Screen("start")
     data object Home : Screen("home")
     data object AddEdit : Screen("add_edit")
     data object List : Screen("list")
     data object History : Screen("history")
+    data object FilmStock : Screen("film_stock")
 }
 
 @Composable
@@ -24,14 +29,20 @@ fun InventoryNavHost(
     navController: NavHostController,
     viewModel: InventoryViewModel,
     inventoryItems: List<InventoryItem>,
+    filmStockItems: List<FilmInventoryItem>,
     tempUpdates: List<InventoryUpdate>,
     allUpdates: List<InventoryUpdate>,
     onAddUpdate: (Int, String, String, Int) -> Unit,
     onCommit: () -> Unit,
     onSaveItem: (InventoryItem) -> Unit,
 ) {
-    NavHost(navController = navController, startDestination = Screen.Home.route) {
+    NavHost(navController = navController, startDestination = Screen.Start.route) {
 
+        composable(Screen.Start.route) {
+            StartScreen(
+                navTo = { navController.navigate(it) }
+            )
+        }
         composable(Screen.Home.route) {
             HomeScreen(
                 items = inventoryItems,
@@ -68,6 +79,15 @@ fun InventoryNavHost(
         composable(Screen.History.route) {
             HistoryScreen(
                 updates = allUpdates,
+                navTo = { navController.navigate(it) }
+            )
+        }
+        composable(Screen.FilmStock.route) {
+            FilmStockScreen(
+                items = filmStockItems,
+                onItemClick = {
+                    // Handle item click if needed
+                },
                 navTo = { navController.navigate(it) }
             )
         }

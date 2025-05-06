@@ -10,9 +10,11 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.shubham.igi.data.AppDatabase
+import com.shubham.igi.data.repository.FilmInventoryRepository
 import com.shubham.igi.data.repository.InventoryRepository
 import com.shubham.igi.ui.navigation.InventoryNavHost
 import com.shubham.igi.ui.theme.InventoryAppTheme
+import com.shubham.igi.viewmodel.FilmInventoryViewModel
 import com.shubham.igi.viewmodel.InventoryViewModel
 
 class MainActivity : ComponentActivity() {
@@ -26,15 +28,21 @@ class MainActivity : ComponentActivity() {
                     val context = applicationContext
                     val db = AppDatabase.getDatabase(context)
                     val repository = InventoryRepository(db.inventoryDao(), db.updateDao())
+                    val FilmStockRepository = FilmInventoryRepository(db.filmInventoryDao())
 
                     val viewModel: InventoryViewModel = viewModel(
                         factory = InventoryViewModel.Factory(repository)
+                    )
+
+                    val filmViewModel: FilmInventoryViewModel = viewModel(
+                        factory = FilmInventoryViewModel.Factory(FilmStockRepository)
                     )
 
                     val navController = rememberNavController()
 
                     // Collect state from ViewModel
                     val items by viewModel.inventoryItems.collectAsState()
+                    val filmStockItems by filmViewModel.filmInventoryItems.collectAsState()
                     val tempUpdates by viewModel.tempUpdates.collectAsState()
                     val allUpdates by viewModel.allUpdates.collectAsState()
 
@@ -43,6 +51,7 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         viewModel = viewModel,
                         inventoryItems = items,
+                        filmStockItems = filmStockItems,
                         tempUpdates = tempUpdates,
                         allUpdates = allUpdates,
                         onAddUpdate = { id, itemName, category, change ->
