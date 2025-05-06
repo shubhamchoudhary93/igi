@@ -45,7 +45,14 @@ class MainActivity : ComponentActivity() {
                         inventoryItems = items,
                         tempUpdates = tempUpdates,
                         allUpdates = allUpdates,
-                        onAddUpdate = { id, itemName, change -> viewModel.addTempUpdate(id, itemName, change) },
+                        onAddUpdate = { id, itemName, category, change ->
+                            viewModel.addTempUpdate(
+                                id,
+                                itemName,
+                                category,
+                                change
+                            )
+                        },
                         onCommit = { viewModel.commitUpdates() },
                         onSaveItem = { item ->
                             if (item.id == 0) viewModel.insertItem(item)

@@ -24,25 +24,25 @@ fun DropdownMenuBox(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    // Create a dropdown menu
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
         modifier = Modifier.fillMaxWidth()
     ) {
-        // OutlinedTextField that shows the selected value and opens the dropdown
+        // 👇 Use `this@ExposedDropdownMenuBox` scope's modifier for anchor
         OutlinedTextField(
             value = selected,
             onValueChange = {},
             label = { Text(label) },
             readOnly = true,
             trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded)
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor() // ✅ This is now safe inside this scope in recent Compose versions
         )
 
-        // DropdownMenu that will show options when expanded
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }

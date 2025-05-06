@@ -26,7 +26,7 @@ fun InventoryNavHost(
     inventoryItems: List<InventoryItem>,
     tempUpdates: List<InventoryUpdate>,
     allUpdates: List<InventoryUpdate>,
-    onAddUpdate: (Int, String, Int) -> Unit,
+    onAddUpdate: (Int, String, String, Int) -> Unit,
     onCommit: () -> Unit,
     onSaveItem: (InventoryItem) -> Unit,
 ) {

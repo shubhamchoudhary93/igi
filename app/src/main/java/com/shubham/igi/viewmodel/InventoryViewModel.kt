@@ -58,10 +58,11 @@ class InventoryViewModel(private val repository: InventoryRepository) : ViewMode
         repository.updateItem(item)
     }
 
-    fun addTempUpdate(itemId: Int, itemName: String, change: Int) {
+    fun addTempUpdate(itemId: Int, itemName: String, category: String = "", change: Int) {
         val update = InventoryUpdate(
             itemId = itemId,
             itemName = itemName,
+            category = category,
             change = change,
             date = currentDateString()
         )

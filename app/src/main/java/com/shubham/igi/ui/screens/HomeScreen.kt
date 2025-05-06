@@ -38,7 +38,7 @@ import com.shubham.igi.ui.navigation.NavigationButtons
 fun HomeScreen(
     items: List<InventoryItem>,
     tempUpdates: List<InventoryUpdate>,
-    onAddUpdate: (Int, String, Int) -> Unit,
+    onAddUpdate: (Int, String, String, Int) -> Unit,
     onCommit: () -> Unit,
     onDiscard: () -> Unit,
     navTo: (String) -> Unit
@@ -65,99 +65,113 @@ fun HomeScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        DropdownMenuBox("Category", categories, selectedCategory) {
-            selectedCategory = it
-        }
+        // Scrollable content
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+        ) {
+            DropdownMenuBox("Category", categories, selectedCategory) {
+                selectedCategory = it
+            }
 
-        Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(8.dp))
 
-        DropdownMenuBox("Item", filteredItems.map { it.name }, selectedItem?.name ?: "") {
-            selectedItem = filteredItems.find { item -> item.name == it }
-            change = selectedItem?.defaultChange?.toString() ?: ""
-        }
+            DropdownMenuBox("Item", filteredItems.map { it.name }, selectedItem?.name ?: "") {
+                selectedItem = filteredItems.find { item -> item.name == it }
+                change = selectedItem?.defaultChange?.toString() ?: ""
+            }
 
-        Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(12.dp))
 
-        selectedItem?.let { it ->
-            Text("Current Amount: ${it.amount}", fontSize = 12.sp)
+            selectedItem?.let { it ->
+                Text("Current Amount: ${it.amount}", fontSize = 12.sp)
 
-            TextField(
-                value = change,
-                onValueChange = { change = it },
-                label = { Text("Change") },
-                modifier = Modifier.fillMaxWidth()
-            )
+                TextField(
+                    value = change,
+                    onValueChange = { change = it },
+                    label = { Text("Change") },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(16.dp))
 
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Button(
-                    onClick = {
-                        change.toIntOrNull()?.let { validChange ->
-                            onAddUpdate(it.id, it.name, validChange)
-                        }
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
-                    modifier = Modifier.weight(1f)
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Button(
+                        onClick = {
+                            change.toIntOrNull()?.let { validChange ->
+                                onAddUpdate(it.id, it.name, it.category, validChange)
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Add")
+                    }
+
+                    Spacer(Modifier.width(8.dp))
+
+                    Button(
+                        onClick = {
+                            change.toIntOrNull()?.let { validChange ->
+                                onAddUpdate(it.id, it.name, it.category, -validChange)
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF44336)),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Minus")
+                    }
+                }
+
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Button(
+                        onClick = { showCommitSheet = true },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF388E3C)),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Commit")
+                    }
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Button(
+                        onClick = { showDiscardSheet = true },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Discard")
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            if (tempUpdates.isNotEmpty()) {
+                Text("Today's Updates:")
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
                 ) {
-                    Text("Add")
+                    items(tempUpdates) {
+                        val changeColor =
+                            if (it.change >= 0) Color(0xFF4CAF50) else Color(0xFFF44336) // Green or Red
+                        Text(
+                            text = "${it.category} ${it.itemName}: ${it.change}",
+                            color = changeColor
+                        )
+                    }
                 }
 
-                Spacer(Modifier.width(8.dp))
-
-                Button(
-                    onClick = {
-                        change.toIntOrNull()?.let { validChange ->
-                            onAddUpdate(it.id, it.name, -validChange)
-                        }
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF44336)),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("Minus")
-                }
+                Spacer(modifier = Modifier.height(16.dp))
             }
+
+
         }
 
+        // Fixed bottom navigation
         Spacer(modifier = Modifier.height(16.dp))
-
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Button(
-                onClick = { showCommitSheet = true },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF388E3C)),
-                modifier = Modifier.weight(1f)
-            ) {
-                Text("Commit")
-            }
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Button(
-                onClick = { showDiscardSheet = true },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)),
-                modifier = Modifier.weight(1f)
-            ) {
-                Text("Discard")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (tempUpdates.isNotEmpty()) {
-            Text("Today's Updates:")
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-            ) {
-                items(tempUpdates) {
-                    Text("${it.itemName}: ${it.change}")
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
-
         NavigationButtons(navTo = navTo)
     }
 

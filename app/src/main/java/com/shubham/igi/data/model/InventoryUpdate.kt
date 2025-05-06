@@ -8,6 +8,7 @@ data class InventoryUpdate(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val itemId: Int,
     val itemName: String,
+    val category: String,
     val date: String,
     val change: Int
 )

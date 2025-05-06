@@ -15,8 +15,14 @@ class UpdateViewModel(
 ) : ViewModel() {
     val tempUpdates = MutableStateFlow<List<InventoryUpdate>>(emptyList())
 
-    fun addTempUpdate(itemId: Int, itemName: String, change: Int) {
-        val update = InventoryUpdate(itemId = itemId, itemName = itemName, change = change, date = LocalDate.now().toString())
+    fun addTempUpdate(itemId: Int, itemName: String, category: String, change: Int) {
+        val update = InventoryUpdate(
+            itemId = itemId,
+            itemName = itemName,
+            category = category,
+            change = change,
+            date = LocalDate.now().toString()
+        )
         tempUpdates.value += update
     }
 
