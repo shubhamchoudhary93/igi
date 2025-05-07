@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.shubham.igi.data.model.InventoryItem
 import com.shubham.igi.data.model.InventoryUpdate
 import com.shubham.igi.ui.components.DropdownMenuBox
-import com.shubham.igi.ui.navigation.NavigationButtons
+import com.shubham.igi.ui.navigation.NavigationButtonsInventory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -172,7 +172,7 @@ fun HomeScreen(
 
         // Fixed bottom navigation
         Spacer(modifier = Modifier.height(16.dp))
-        NavigationButtons(navTo = navTo)
+        NavigationButtonsInventory(navTo = navTo)
     }
 
     // ✅ Bottom sheet for commit

@@ -14,15 +14,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.shubham.igi.data.model.FilmInventoryItem
 import com.shubham.igi.data.model.InventoryUpdate
+import com.shubham.igi.ui.navigation.NavigationButtonsFilm
 import com.shubham.igi.ui.navigation.NavigationButtonsInventory
 
 @Composable
-fun HistoryScreen(
-    updates: List<InventoryUpdate>,
+fun HistoryFilmScreen(
+    updates: List<FilmInventoryItem>,
     navTo: (String) -> Unit
 ) {
-    val grouped = updates.groupBy { it.date }
+    val grouped = updates
+        .filter { it.removeDate != "" }
+        .groupBy { it.removeDate }
 
     Column(
         modifier = Modifier
@@ -43,13 +47,9 @@ fun HistoryScreen(
                     )
                 }
                 items(list) { update ->
-                    val changeColor =
-                        if (update.change >= 0) Color(0xFF4CAF50) else Color(0xFFF44336)
-
                     Text(
-                        text = "${update.category} ${update.itemName} : ${update.change}",
+                        text = "${update.name} ${update.size} : ${update.weight}",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = changeColor,
                         modifier = Modifier.padding(start = 16.dp, bottom = 4.dp)
                     )
                 }
@@ -58,7 +58,7 @@ fun HistoryScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        NavigationButtonsInventory(navTo = navTo)
+        NavigationButtonsFilm(navTo = navTo)
     }
 }
 

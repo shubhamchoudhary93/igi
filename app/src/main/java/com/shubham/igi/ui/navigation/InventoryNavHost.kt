@@ -7,20 +7,25 @@ import androidx.navigation.compose.composable
 import com.shubham.igi.data.model.FilmInventoryItem
 import com.shubham.igi.data.model.InventoryItem
 import com.shubham.igi.data.model.InventoryUpdate
+import com.shubham.igi.ui.screens.AddEditFilmScreen
 import com.shubham.igi.ui.screens.AddEditScreen
 import com.shubham.igi.ui.screens.FilmStockScreen
+import com.shubham.igi.ui.screens.HistoryFilmScreen
 import com.shubham.igi.ui.screens.HistoryScreen
 import com.shubham.igi.ui.screens.HomeScreen
 import com.shubham.igi.ui.screens.InventoryListScreen
 import com.shubham.igi.ui.screens.StartScreen
+import com.shubham.igi.viewmodel.FilmInventoryViewModel
 import com.shubham.igi.viewmodel.InventoryViewModel
 
 sealed class Screen(val route: String) {
     data object Start : Screen("start")
     data object Home : Screen("home")
     data object AddEdit : Screen("add_edit")
+    data object AddEditFilm : Screen("add_edit_film")
     data object List : Screen("list")
     data object History : Screen("history")
+    data object HistoryFilm : Screen("history_film")
     data object FilmStock : Screen("film_stock")
 }
 
@@ -28,6 +33,7 @@ sealed class Screen(val route: String) {
 fun InventoryNavHost(
     navController: NavHostController,
     viewModel: InventoryViewModel,
+    filmViewModel: FilmInventoryViewModel,
     inventoryItems: List<InventoryItem>,
     filmStockItems: List<FilmInventoryItem>,
     tempUpdates: List<InventoryUpdate>,
@@ -54,9 +60,28 @@ fun InventoryNavHost(
             )
         }
 
+        composable(Screen.FilmStock.route) {
+            FilmStockScreen(
+                items = filmStockItems,
+                onItemClick = TODO(),
+                navTo = { navController.navigate(it) }
+            )
+        }
+
         composable(Screen.AddEdit.route) {
             AddEditScreen(
                 viewModel = viewModel,
+                onSave = {
+                    onSaveItem(it)
+                    navController.popBackStack()
+                },
+                navTo = { navController.navigate(it) }
+            )
+        }
+
+        composable(Screen.AddEditFilm.route) {
+            AddEditFilmScreen(
+                viewModel = filmViewModel,
                 onSave = {
                     onSaveItem(it)
                     navController.popBackStack()
@@ -82,6 +107,13 @@ fun InventoryNavHost(
                 navTo = { navController.navigate(it) }
             )
         }
+
+        composable(Screen.HistoryFilm.route) {
+            HistoryFilmScreen(
+                updates = filmStockItems,
+                navTo = { navController.navigate(it) }
+            )
+        }
         composable(Screen.FilmStock.route) {
             FilmStockScreen(
                 items = filmStockItems,
@@ -91,5 +123,6 @@ fun InventoryNavHost(
                 navTo = { navController.navigate(it) }
             )
         }
+
     }
 }

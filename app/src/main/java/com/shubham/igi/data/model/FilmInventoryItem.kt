@@ -10,5 +10,5 @@ data class FilmInventoryItem(
     val size: Int,
     val weight: Float,
     val addDate: String,
-    val removeData: String = "",
+    val removeDate: String = "",
 )

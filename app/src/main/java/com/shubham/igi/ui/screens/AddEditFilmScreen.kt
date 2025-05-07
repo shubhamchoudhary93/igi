@@ -20,48 +20,51 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.shubham.igi.data.model.FilmInventoryItem
 import com.shubham.igi.data.model.InventoryItem
+import com.shubham.igi.ui.navigation.NavigationButtonsFilm
 import com.shubham.igi.ui.navigation.NavigationButtonsInventory
+import com.shubham.igi.viewmodel.FilmInventoryViewModel
 import com.shubham.igi.viewmodel.InventoryViewModel
 
 @Composable
-fun AddEditScreen(
-    viewModel: InventoryViewModel,
-    onSave: (InventoryItem) -> Unit,
+fun AddEditFilmScreen(
+    viewModel: FilmInventoryViewModel,
+    onSave: (FilmInventoryItem) -> Unit,
     navTo: (String) -> Unit
 ) {
     val selectedItem by viewModel.selectedItem.collectAsState()
 
     var name by remember { mutableStateOf("") }
-    var category by remember { mutableStateOf("") }
-    var amount by remember { mutableStateOf("") }
-    var defaultChange by remember { mutableStateOf("") }
-    var minQ by remember { mutableStateOf("") }
+    var size by remember { mutableStateOf("") }
+    var weight by remember { mutableStateOf("") }
+    var addDate by remember { mutableStateOf("") }
+    var removeDate by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
 
     // Populate fields when selectedItem is available
     LaunchedEffect(selectedItem) {
         selectedItem?.let {
             name = it.name
-            category = it.category
-            amount = it.amount.toString()
-            defaultChange = it.defaultChange.toString()
-            minQ = it.minQ.toString()
+            size = it.size.toString()
+            weight = it.weight.toString()
+            addDate = it.addDate
+            removeDate = it.removeDate
         }
     }
 
     // Validate inputs before saving
     fun validateInputs(): Boolean {
-        return name.isNotBlank() && category.isNotBlank() && amount.isNotBlank() && defaultChange.isNotBlank() && minQ.isNotBlank()
+        return name.isNotBlank() && size.isNotBlank() && weight.isNotBlank() && addDate.isNotBlank()
     }
 
     // Function to clear the fields
     fun clearFields() {
         name = ""
-        category = ""
-        amount = ""
-        defaultChange = ""
-        minQ = ""
+        size = ""
+        weight = ""
+        addDate = ""
+        removeDate = ""
         errorMessage = ""
     }
 
@@ -74,30 +77,30 @@ fun AddEditScreen(
         )
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
-            value = category,
-            onValueChange = { category = it },
-            label = { Text("Category") },
+            value = size,
+            onValueChange = { size = it },
+            label = { Text("Size") },
             modifier = Modifier.fillMaxWidth() // Make it take full width
         )
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
-            value = amount,
-            onValueChange = { amount = it },
-            label = { Text("Amount") },
+            value = weight,
+            onValueChange = { weight = it },
+            label = { Text("Weight") },
             modifier = Modifier.fillMaxWidth() // Make it take full width
         )
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
-            value = defaultChange,
-            onValueChange = { defaultChange = it },
-            label = { Text("Default Change") },
+            value = addDate,
+            onValueChange = { addDate = it },
+            label = { Text("Add Date") },
             modifier = Modifier.fillMaxWidth() // Make it take full width
         )
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
-            value = minQ,
-            onValueChange = { minQ = it },
-            label = { Text("Min Quantity") },
+            value = removeDate,
+            onValueChange = { removeDate = it },
+            label = { Text("Remove Date") },
             modifier = Modifier.fillMaxWidth() // Make it take full width
         )
         Spacer(modifier = Modifier
@@ -114,13 +117,13 @@ fun AddEditScreen(
             Button(
                 onClick = {
                     if (validateInputs()) {
-                        val itemToSave = InventoryItem(
+                        val itemToSave = FilmInventoryItem(
                             id = selectedItem?.id ?: 0, // 0 for new item
                             name = name,
-                            category = category,
-                            amount = amount.toIntOrNull() ?: 0,
-                            defaultChange = defaultChange.toIntOrNull() ?: 1,
-                            minQ = minQ.toIntOrNull() ?: 0
+                            size = size.toIntOrNull() ?: 0,
+                            weight = weight.toFloatOrNull() ?: 0F,
+                            addDate = addDate,
+                            removeDate = removeDate
                         )
                         onSave(itemToSave)
                         viewModel.clearSelectedItem() // ✅ clear after saving
@@ -145,6 +148,6 @@ fun AddEditScreen(
         }
 
         Spacer(modifier = Modifier.height(24.dp))
-        NavigationButtonsInventory(navTo = navTo)
+        NavigationButtonsFilm(navTo = navTo)
     }
 }

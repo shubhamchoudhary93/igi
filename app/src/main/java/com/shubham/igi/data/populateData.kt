@@ -3388,7 +3388,7 @@ suspend fun populateData(INSTANCE: AppDatabase?) {
             size = 7,
             weight = 59.9f,
             addDate = "2025-05-06",
-            removeData = "2025-05-07"
+            removeDate = "2025-05-07"
         )
     )
     dao2?.insertItem(
@@ -3397,7 +3397,7 @@ suspend fun populateData(INSTANCE: AppDatabase?) {
             size = 7,
             weight = 57.3f,
             addDate = "2025-05-06",
-            removeData = "2025-05-07"
+            removeDate = "2025-05-07"
         )
     )
     dao2?.insertItem(
@@ -3406,7 +3406,7 @@ suspend fun populateData(INSTANCE: AppDatabase?) {
             size = 10,
             weight = 59f,
             addDate = "2025-05-05",
-            removeData = "2025-05-07"
+            removeDate = "2025-05-07"
         )
     )
     dao2?.insertItem(
@@ -3415,7 +3415,7 @@ suspend fun populateData(INSTANCE: AppDatabase?) {
             size = 7,
             weight = 59.9f,
             addDate = "2025-05-06",
-            removeData = "2025-05-07"
+            removeDate = "2025-05-07"
         )
     )
     dao2?.insertItem(

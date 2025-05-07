@@ -13,25 +13,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun NavigationButtons(navTo: (String) -> Unit) {
+fun NavigationButtonsFilm(navTo: (String) -> Unit) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         val buttonModifier = Modifier.weight(1f)
         val buttonTextStyle = MaterialTheme.typography.labelLarge.copy(fontSize = 12.sp)
         val smallPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp)
 
-        Button(onClick = { navTo("home") },
+        Button(onClick = { navTo("film_stock") },
             modifier = buttonModifier,
             contentPadding = smallPadding
-        ) { Text("Home", style = buttonTextStyle) }
-        Button(onClick = { navTo("list") },
-            modifier = buttonModifier,
-            contentPadding = smallPadding
-        ) { Text("Inventory", style = buttonTextStyle) }
-        Button(onClick = { navTo("add_edit") },
+        ) { Text("Film", style = buttonTextStyle) }
+        Button(onClick = { navTo("add_edit_film") },
             modifier = buttonModifier,
             contentPadding = smallPadding
         ) { Text("Add/Edit", style = buttonTextStyle) }
-        Button(onClick = { navTo("history") },
+        Button(onClick = { navTo("history_film") },
             modifier = buttonModifier,
             contentPadding = smallPadding
         ) { Text("History", style = buttonTextStyle) }

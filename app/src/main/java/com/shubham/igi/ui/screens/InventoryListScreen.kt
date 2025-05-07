@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.shubham.igi.data.model.InventoryItem
 import com.shubham.igi.ui.components.InventoryDialog
-import com.shubham.igi.ui.navigation.NavigationButtons
+import com.shubham.igi.ui.navigation.NavigationButtonsInventory
 
 @Composable
 fun InventoryListScreen(
@@ -70,7 +70,7 @@ fun InventoryListScreen(
         }
 
         Spacer(modifier = Modifier.height(24.dp))
-        NavigationButtons(navTo = navTo)
+        NavigationButtonsInventory(navTo = navTo)
 
         selectedItem?.let { item ->
             InventoryDialog(

@@ -20,7 +20,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.shubham.igi.data.model.FilmInventoryItem
-import com.shubham.igi.ui.navigation.NavigationButtons
+import com.shubham.igi.ui.navigation.NavigationButtonsFilm
+import com.shubham.igi.ui.navigation.NavigationButtonsInventory
 
 @Composable
 fun FilmStockScreen(
@@ -36,7 +37,7 @@ fun FilmStockScreen(
             .padding(16.dp)
     ) {
         val groupedByName = items
-            .filter { it.removeData == "" }
+            .filter { it.removeDate == "" }
             .groupBy { it.name }
 
         LazyColumn(
@@ -68,7 +69,7 @@ fun FilmStockScreen(
         }
 
         Spacer(modifier = Modifier.height(24.dp))
-        NavigationButtons(navTo = navTo)
+        NavigationButtonsFilm(navTo = navTo)
 
         selectedItem?.let { item ->
             TODO()

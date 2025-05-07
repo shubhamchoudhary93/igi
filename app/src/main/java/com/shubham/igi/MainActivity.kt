@@ -50,6 +50,7 @@ class MainActivity : ComponentActivity() {
                     InventoryNavHost(
                         navController = navController,
                         viewModel = viewModel,
+                        filmViewModel = filmViewModel,
                         inventoryItems = items,
                         filmStockItems = filmStockItems,
                         tempUpdates = tempUpdates,
