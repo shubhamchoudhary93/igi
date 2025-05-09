@@ -28,14 +28,14 @@ class MainActivity : ComponentActivity() {
                     val context = applicationContext
                     val db = AppDatabase.getDatabase(context)
                     val repository = InventoryRepository(db.inventoryDao(), db.updateDao())
-                    val FilmStockRepository = FilmInventoryRepository(db.filmInventoryDao())
+                    val filmStockRepository = FilmInventoryRepository(db.filmInventoryDao())
 
                     val viewModel: InventoryViewModel = viewModel(
                         factory = InventoryViewModel.Factory(repository)
                     )
 
                     val filmViewModel: FilmInventoryViewModel = viewModel(
-                        factory = FilmInventoryViewModel.Factory(FilmStockRepository)
+                        factory = FilmInventoryViewModel.Factory(filmStockRepository)
                     )
 
                     val navController = rememberNavController()
@@ -55,18 +55,23 @@ class MainActivity : ComponentActivity() {
                         filmStockItems = filmStockItems,
                         tempUpdates = tempUpdates,
                         allUpdates = allUpdates,
-                        onAddUpdate = { id, itemName, category, change ->
+                        onAddUpdate = { id, itemName, category, change, date ->
                             viewModel.addTempUpdate(
                                 id,
                                 itemName,
                                 category,
-                                change
+                                change,
+                                date
                             )
                         },
                         onCommit = { viewModel.commitUpdates() },
                         onSaveItem = { item ->
                             if (item.id == 0) viewModel.insertItem(item)
                             else viewModel.updateItem(item)
+                        },
+                        onSaveItemFilm = { item ->
+                            if (item.id == 0) filmViewModel.insertItem(item)
+                            else filmViewModel.updateItem(item)
                         }
                     )
                 }

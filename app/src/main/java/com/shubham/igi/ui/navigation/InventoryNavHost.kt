@@ -38,9 +38,10 @@ fun InventoryNavHost(
     filmStockItems: List<FilmInventoryItem>,
     tempUpdates: List<InventoryUpdate>,
     allUpdates: List<InventoryUpdate>,
-    onAddUpdate: (Int, String, String, Int) -> Unit,
+    onAddUpdate: (Int, String, String, Int, String) -> Unit,
     onCommit: () -> Unit,
     onSaveItem: (InventoryItem) -> Unit,
+    onSaveItemFilm: (FilmInventoryItem) -> Unit
 ) {
     NavHost(navController = navController, startDestination = Screen.Start.route) {
 
@@ -56,14 +57,18 @@ fun InventoryNavHost(
                 onAddUpdate = onAddUpdate,
                 onCommit = onCommit,
                 onDiscard = { viewModel.clearTempUpdates() },
-                navTo = { navController.navigate(it) }
+                navTo = { navController.navigate(it) },
+                onSync = {}
             )
         }
 
         composable(Screen.FilmStock.route) {
             FilmStockScreen(
                 items = filmStockItems,
-                onItemClick = TODO(),
+                onItemClick = {
+                    filmViewModel.setSelectedItem(it)
+                    navController.navigate(Screen.AddEditFilm.route)
+                },
                 navTo = { navController.navigate(it) }
             )
         }
@@ -83,7 +88,7 @@ fun InventoryNavHost(
             AddEditFilmScreen(
                 viewModel = filmViewModel,
                 onSave = {
-                    onSaveItem(it)
+                    onSaveItemFilm(it)
                     navController.popBackStack()
                 },
                 navTo = { navController.navigate(it) }
@@ -118,7 +123,8 @@ fun InventoryNavHost(
             FilmStockScreen(
                 items = filmStockItems,
                 onItemClick = {
-                    // Handle item click if needed
+                    filmViewModel.setSelectedItem(it)
+                    navController.navigate(Screen.AddEditFilm.route)
                 },
                 navTo = { navController.navigate(it) }
             )

@@ -10,9 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class InventoryViewModel(private val repository: InventoryRepository) : ViewModel() {
 
@@ -58,13 +55,19 @@ class InventoryViewModel(private val repository: InventoryRepository) : ViewMode
         repository.updateItem(item)
     }
 
-    fun addTempUpdate(itemId: Int, itemName: String, category: String = "", change: Int) {
+    fun addTempUpdate(
+        itemId: Int,
+        itemName: String,
+        category: String = "",
+        change: Int,
+        date: String
+    ) {
         val update = InventoryUpdate(
             itemId = itemId,
             itemName = itemName,
             category = category,
             change = change,
-            date = currentDateString()
+            date = date
         )
         _tempUpdates.value += update
     }
@@ -90,11 +93,6 @@ class InventoryViewModel(private val repository: InventoryRepository) : ViewMode
     // ✅ Clear the selected item after save
     fun clearSelectedItem() {
         _selectedItem.value = null
-    }
-
-    private fun currentDateString(): String {
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return sdf.format(Date())
     }
 
     class Factory(private val repository: InventoryRepository) : ViewModelProvider.Factory {
