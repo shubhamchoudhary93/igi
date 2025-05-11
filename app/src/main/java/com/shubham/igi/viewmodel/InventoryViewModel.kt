@@ -104,4 +104,9 @@ class InventoryViewModel(private val repository: InventoryRepository) : ViewMode
             throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
+
+    fun refresh() {
+        loadItems()
+        loadAllUpdates()
+    }
 }
