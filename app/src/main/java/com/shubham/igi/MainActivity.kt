@@ -9,6 +9,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.FirebaseApp
 import com.shubham.igi.data.AppDatabase
 import com.shubham.igi.data.repository.FilmInventoryRepository
 import com.shubham.igi.data.repository.InventoryRepository
@@ -21,7 +22,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        FirebaseApp.initializeApp(this)
         setContent {
             InventoryAppTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {

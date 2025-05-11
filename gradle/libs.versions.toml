@@ -1,5 +1,6 @@
 [versions]
 agp = "8.9.2"
+firebaseBom = "33.13.0"
 kotlin = "2.1.0"
 coreKtx = "1.16.0"
 lifecycleRuntimeKtx = "2.9.0"
@@ -9,6 +10,8 @@ roomCompiler = "2.7.1"
 roomKtx = "2.7.1"
 navigationCompose = "2.9.0"
 materialIconsExtended = "1.7.8"
+firebaseStorageKtx = "21.0.1"
+comGoogleGmsGoogleServicesGradlePlugin = "4.4.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -22,6 +25,10 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIconsExtended" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
+com-google-gms-google-services-gradle-plugin = { group = "com.google.gms.google-services", name = "com.google.gms.google-services.gradle.plugin", version.ref = "comGoogleGmsGoogleServicesGradlePlugin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

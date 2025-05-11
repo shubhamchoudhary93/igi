@@ -57,8 +57,7 @@ fun InventoryNavHost(
                 onAddUpdate = onAddUpdate,
                 onCommit = onCommit,
                 onDiscard = { viewModel.clearTempUpdates() },
-                navTo = { navController.navigate(it) },
-                onSync = {}
+                navTo = { navController.navigate(it) }
             )
         }
 
