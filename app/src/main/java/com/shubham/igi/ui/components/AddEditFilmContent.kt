@@ -84,7 +84,7 @@ fun AddEditFilmContent(
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .menuAnchor(type, enabled)
+                    .menuAnchor()
             )
             ExposedDropdownMenu(
                 expanded = expanded,
