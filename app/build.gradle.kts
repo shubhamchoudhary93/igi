@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "com.shubham.igi"
-    compileSdk = 35
+    compileSdk = 35  // Set this to 33 or the latest supported SDK
 
     defaultConfig {
         applicationId = "com.shubham.igi"
-        minSdk = 34
-        targetSdk = 35
+        minSdk = 21   // Ensure your minSdk is appropriate, 21 is recommended for most apps
+        targetSdk = 35 // Update target SDK version to the latest supported
         versionCode = 1
         versionName = "1.0"
     }
@@ -27,13 +27,16 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
     }
@@ -49,8 +52,10 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.firebase.storage.ktx)
     implementation(libs.com.google.gms.google.services.gradle.plugin)
+    implementation(libs.androidx.runtime)
+    implementation(libs.ui)
+    implementation(libs.material3)  // Ensure you have only one entry for Material3
     ksp(libs.androidx.room.compiler)
-implementation(libs.androidx.room.compiler)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.androidx.core.ktx)
@@ -59,5 +64,5 @@ implementation(libs.androidx.room.compiler)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.material3)
+    // Remove duplicate Material3 import
 }
