@@ -40,7 +40,7 @@ fun DropdownMenuBox(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor(type, enabled) // ✅ This is now safe inside this scope in recent Compose versions
+                .menuAnchor() // ✅ This is now safe inside this scope in recent Compose versions
         )
 
         ExposedDropdownMenu(
