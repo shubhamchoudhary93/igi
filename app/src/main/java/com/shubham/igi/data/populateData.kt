@@ -1,6 +1,6 @@
 package com.shubham.igi.data
 
-import com.shubham.igi.data.model.InventoryItem
+import com.shubham.igi.inventory.data.model.InventoryItem
 
 suspend fun populateData(INSTANCE: AppDatabase?) {
     val dao = INSTANCE?.inventoryDao()

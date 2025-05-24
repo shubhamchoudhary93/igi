@@ -2,12 +2,14 @@ package com.shubham.igi.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,34 +27,87 @@ import com.shubham.igi.utils.restoreDatabase
 @Composable
 fun StartScreen(navTo: (String) -> Unit) {
     val context = LocalContext.current
-    var restoreInProgress by remember { mutableStateOf(false) }
 
-    // Trigger restore only once when this composable is first loaded
-    LaunchedEffect(true) {
-        if (!restoreInProgress) {
-            restoreInProgress = true
-            restoreDatabase(
-                context = context,
-                onSuccess = { Log.d("Restore", "Database restored successfully") },
-                onFailure = { e -> Log.e("Restore", "Restore failed", e) }
-            )
-        }
+    var restoreInProgress by remember { mutableStateOf(true) }
+    var restoreFailed by remember { mutableStateOf(false) }
+
+    // Trigger restore on first composition and on retry
+    LaunchedEffect(restoreFailed) {
+        if (restoreFailed) return@LaunchedEffect // wait for retry click
+
+        restoreDatabase(
+            context = context,
+            onSuccess = {
+                restoreInProgress = false
+                restoreFailed = false
+                Log.d("Restore", "Database restored successfully")
+            },
+            onFailure = { e ->
+                restoreInProgress = false
+                restoreFailed = true
+                Log.e("Restore", "Restore failed", e)
+            }
+        )
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(32.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        contentAlignment = Alignment.Center
     ) {
-        Text("I G Insulation", style = MaterialTheme.typography.headlineSmall)
-        Spacer(modifier = Modifier.height(24.dp))
-        Button(onClick = { navTo("home") }) {
-            Text("Inventory")
-        }
-        Button(onClick = { navTo("film_stock") }) {
-            Text("Inventory Film")
+        when {
+            restoreInProgress -> {
+                // Show progress indicator while restoring
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    CircularProgressIndicator()
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text("Restoring latest backup...")
+                }
+            }
+
+            restoreFailed -> {
+                // Show error and retry button
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        "Failed to restore backup.",
+                        color = MaterialTheme.colorScheme.error
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(onClick = {
+                        restoreInProgress = true
+                        restoreFailed = false
+                    }) {
+                        Text("Retry")
+                    }
+                }
+            }
+
+            else -> {
+                // Show main content only after restore success
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text("I G Insulation", style = MaterialTheme.typography.headlineSmall)
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Button(onClick = { navTo("home") }) {
+                        Text("Inventory")
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Button(onClick = { navTo("film_stock") }) {
+                        Text("Inventory Film")
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Button(onClick = { navTo("clients") }) {
+                        Text("Clients")
+                    }
+                }
+            }
         }
     }
 }

@@ -34,11 +34,37 @@ private fun uploadZipToFirebase(
 ) {
     val storage = Firebase.storage
     val storageRef = storage.reference
-    val fileRef = storageRef.child("backups/${zipFile.name}") // Customize path
-
+    val backupsRef = storageRef.child("backups")
+    val newFileRef = backupsRef.child(zipFile.name)
     val uri = Uri.fromFile(zipFile)
-    fileRef.putFile(uri)
-        .addOnSuccessListener { onSuccess() }
+
+    newFileRef.putFile(uri)
+        .addOnSuccessListener {
+            // Clean up old backups: keep only the latest 10
+            backupsRef.listAll()
+                .addOnSuccessListener { listResult ->
+                    val sorted = listResult.items.sortedByDescending {
+                        it.name.substringAfter("backup_").substringBefore(".zip").toLongOrNull()
+                            ?: 0L
+                    }
+                    val filesToDelete = sorted.drop(10)
+
+                    filesToDelete.forEach { fileRef ->
+                        fileRef.delete().addOnSuccessListener {
+                            Log.d("Backup", "Deleted old backup: ${fileRef.name}")
+                        }.addOnFailureListener {
+                            Log.w("Backup", "Failed to delete old backup: ${fileRef.name}", it)
+                        }
+                    }
+
+                    onSuccess()
+                }
+                .addOnFailureListener { listErr ->
+                    Log.e("Backup", "Failed to list backups for cleanup", listErr)
+                    onSuccess() // Still consider the upload successful
+                }
+
+        }
         .addOnFailureListener { exception -> onFailure(exception) }
 }
 
@@ -51,9 +77,11 @@ fun backupDatabase(
     if (dbPath.exists()) {
         val dbShm = File(dbPath.parent, "inventory_database-shm")
         val dbWal = File(dbPath.parent, "inventory_database-wal")
-        val zipFile = File(context.cacheDir, "backup.zip")
+        val timestamp = System.currentTimeMillis()
+        val zipFile = File(context.cacheDir, "backup_$timestamp.zip")
 
         zipDatabaseFiles(listOf(dbPath, dbShm, dbWal), zipFile)
+
         uploadZipToFirebase(
             zipFile,
             onSuccess,
@@ -62,7 +90,6 @@ fun backupDatabase(
     } else {
         Log.e("Backup", "Database file does not exist yet")
     }
-
 }
 
 fun restoreDatabase(
@@ -71,9 +98,8 @@ fun restoreDatabase(
     onFailure: (Exception) -> Unit = {}
 ) {
     val storage = Firebase.storage
-    val storageRef = storage.reference.child("backups")  // folder containing zip files
+    val storageRef = storage.reference.child("backups")
 
-    // Get the list of backup files and download the latest one
     storageRef.listAll()
         .addOnSuccessListener { listResult ->
             val latestFileRef = listResult.items.maxByOrNull {

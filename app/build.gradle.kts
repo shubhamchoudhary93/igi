@@ -54,7 +54,10 @@ dependencies {
     implementation(libs.com.google.gms.google.services.gradle.plugin)
     implementation(libs.androidx.runtime)
     implementation(libs.ui)
-    implementation(libs.material3)  // Ensure you have only one entry for Material3
+    implementation(libs.material3)
+    implementation(libs.coil.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.runtime.livedata)  // Ensure you have only one entry for Material3
     ksp(libs.androidx.room.compiler)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
